@@ -37,10 +37,12 @@
 #include <sys/un.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
+#include <linux/tipc.h> // TIPC
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
+#include <stdlib.h> // atoi
 #include <netdb.h>
 #include <errno.h>
 #include <stdarg.h>
@@ -363,6 +365,40 @@ int redisContextConnectUnix(redisContext *c, const char *path, const struct time
 
     sa.sun_family = AF_LOCAL;
     strncpy(sa.sun_path,path,sizeof(sa.sun_path)-1);
+    if (connect(c->fd, (struct sockaddr*)&sa, sizeof(sa)) == -1) {
+        if (errno == EINPROGRESS && !blocking) {
+            /* This is ok. */
+        } else {
+            if (redisContextWaitReady(c,timeout) != REDIS_OK)
+                return REDIS_ERR;
+        }
+    }
+
+    /* Reset socket to be blocking after connect(2). */
+    if (blocking && redisSetBlocking(c,1) != REDIS_OK)
+        return REDIS_ERR;
+
+    c->flags |= REDIS_CONNECTED;
+    return REDIS_OK;
+}
+
+int redisContextConnectTIPC(redisContext *c, int service, int instance, const struct timeval *timeout) {
+    int blocking = (c->flags & REDIS_BLOCK);
+    struct sockaddr_tipc sa;
+
+    if (redisCreateSocket(c,AF_TIPC) < 0)
+        return REDIS_ERR;
+    if (redisSetBlocking(c,0) != REDIS_OK)
+        return REDIS_ERR;
+
+    sa.family = AF_TIPC;
+    sa.addrtype = TIPC_ADDR_NAME;
+    sa.scope = TIPC_ZONE_SCOPE;
+
+    sa.addr.name.name.type = service;
+    sa.addr.name.name.instance = instance;
+    sa.addr.name.domain = 0;
+
     if (connect(c->fd, (struct sockaddr*)&sa, sizeof(sa)) == -1) {
         if (errno == EINPROGRESS && !blocking) {
             /* This is ok. */

@@ -15,7 +15,8 @@
 enum connection_type {
     CONN_TCP,
     CONN_UNIX,
-    CONN_FD
+    CONN_FD,
+    CONN_TIPC
 };
 
 struct config {
@@ -98,6 +99,8 @@ static redisContext *connect(struct config config) {
             printf("Connecting to inherited fd %d\n", fd);
             c = redisConnectFd(fd);
         }
+    } else if (config.type == CONN_TIPC) {
+        c = redisConnectTIPC(config.unix.path);
     } else {
         assert(NULL);
     }

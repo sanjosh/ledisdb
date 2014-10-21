@@ -1105,6 +1105,42 @@ redisContext *redisConnectUnixNonBlock(const char *path) {
     return c;
 }
 
+redisContext *redisConnectTIPC(int service, int instance) {
+    redisContext *c;
+
+    c = redisContextInit();
+    if (c == NULL)
+        return NULL;
+
+    c->flags |= REDIS_BLOCK;
+    redisContextConnectTIPC(c,service, instance,NULL);
+    return c;
+}
+
+redisContext *redisConnectTIPCWithTimeout(int service, int instance, const struct timeval tv) {
+    redisContext *c;
+
+    c = redisContextInit();
+    if (c == NULL)
+        return NULL;
+
+    c->flags |= REDIS_BLOCK;
+    redisContextConnectTIPC(c,service, instance,&tv);
+    return c;
+}
+
+redisContext *redisConnectTIPCNonBlock(int service, int instance) {
+    redisContext *c;
+
+    c = redisContextInit();
+    if (c == NULL)
+        return NULL;
+
+    c->flags &= ~REDIS_BLOCK;
+    redisContextConnectTIPC(c,service, instance, NULL);
+    return c;
+}
+
 redisContext *redisConnectFd(int fd) {
     redisContext *c;
 

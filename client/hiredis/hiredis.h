@@ -176,9 +176,15 @@ redisContext *redisConnect(const char *ip, int port);
 redisContext *redisConnectWithTimeout(const char *ip, int port, const struct timeval tv);
 redisContext *redisConnectNonBlock(const char *ip, int port);
 redisContext *redisConnectBindNonBlock(const char *ip, int port, const char *source_addr);
+
 redisContext *redisConnectUnix(const char *path);
 redisContext *redisConnectUnixWithTimeout(const char *path, const struct timeval tv);
 redisContext *redisConnectUnixNonBlock(const char *path);
+
+redisContext *redisConnectTIPC(int service, int instance);
+redisContext *redisConnectTIPCWithTimeout(int service, int instance, const struct timeval tv);
+redisContext *redisConnectTIPCNonBlock(int service, int instance);
+
 redisContext *redisConnectFd(int fd);
 int redisSetTimeout(redisContext *c, const struct timeval tv);
 int redisEnableKeepAlive(redisContext *c);

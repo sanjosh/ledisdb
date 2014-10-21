@@ -4,7 +4,7 @@
 # This file is released under the BSD license, see the COPYING file
 
 OBJ=net.o hiredis.o sds.o async.o
-EXAMPLES=hiredis-example hiredis-example-libevent hiredis-example-libev
+EXAMPLES=hiredis-example hiredis-example-tipc hiredis-example-libevent hiredis-example-libev
 TESTS=hiredis-test
 LIBNAME=libhiredis
 
@@ -98,6 +98,9 @@ hiredis-example-libuv: examples/example-libuv.c adapters/libuv.h $(STLIBNAME)
 endif
 
 hiredis-example: examples/example.c $(STLIBNAME)
+	$(CC) -o examples/$@ $(REAL_CFLAGS) $(REAL_LDFLAGS) -I. $< $(STLIBNAME)
+
+hiredis-example-tipc: examples/example-tipc.c $(STLIBNAME)
 	$(CC) -o examples/$@ $(REAL_CFLAGS) $(REAL_LDFLAGS) -I. $< $(STLIBNAME)
 
 examples: $(EXAMPLES)
