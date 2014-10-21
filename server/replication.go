@@ -70,7 +70,7 @@ func (m *master) connect() error {
 		m.conn = nil
 	}
 
-	if conn, err := net.Dial("tcp", m.addr); err != nil {
+	if conn, err := net.Dial(netType(m.addr), m.addr); err != nil {
 		return err
 	} else {
 		m.conn = conn

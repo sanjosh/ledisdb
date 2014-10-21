@@ -32,6 +32,8 @@ func NewClient(cfg *Config) *Client {
 
 	if strings.Contains(cfg.Addr, "/") {
 		c.proto = "unix"
+	} else if strings.Contains(cfg.Addr, ";") {
+		c.proto = "tipc"
 	} else {
 		c.proto = "tcp"
 	}

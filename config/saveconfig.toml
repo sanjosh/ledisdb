@@ -1,10 +1,10 @@
 # LedisDB configuration
 
 # Server listen address
-addr = "8888;118"
+addr = "127.0.0.1:6380"
 
 # Server http listen address, set empty to disable
-http_addr = ""
+http_addr = "127.0.0.1:11181"
 
 # Data store path, all ledisdb's data will be saved here
 data_dir = "/tmp/ledis_server"

@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+var tipc = flag.String("t", "8888", "ledisdb server tipc (default 8888)")
 var ip = flag.String("h", "127.0.0.1", "ledisdb server ip (default 127.0.0.1)")
 var port = flag.Int("p", 6380, "ledisdb server port (default 6380)")
 var socket = flag.String("s", "", "ledisdb server socket, overwrite ip and port")
@@ -20,6 +21,8 @@ func main() {
 	cfg := new(ledis.Config)
 	if len(*socket) > 0 {
 		cfg.Addr = *socket
+	} else if tipc != nil {
+		cfg.Addr = fmt.Sprintf("%s;%d", *tipc, *port)
 	} else {
 		cfg.Addr = fmt.Sprintf("%s:%d", *ip, *port)
 	}

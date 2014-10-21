@@ -41,6 +41,8 @@ type App struct {
 func netType(s string) string {
 	if strings.Contains(s, "/") {
 		return "unix"
+	} else if strings.Contains(s, ";") {
+		return "tipc"
 	} else {
 		return "tcp"
 	}
