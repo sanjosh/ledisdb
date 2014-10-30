@@ -1,10 +1,10 @@
 # LedisDB configuration
 
-# Server listen address
-addr = "127.0.0.1:6380"
+# TIPC Server listen address is specified using ";" separator
+addr = "8888;118"
 
 # Server http listen address, set empty to disable
-http_addr = "127.0.0.1:11181"
+http_addr = ""
 
 # Data store path, all ledisdb's data will be saved here
 data_dir = "/tmp/ledis_server"
